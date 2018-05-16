@@ -1,4 +1,17 @@
-.classpath
-.settings
+# Eclipse project file #
+.metadata
+.recommenders
 .project
+.settings
+.classpath
 target
+
+# IDEA project file #
+.idea
+*.ids
+*.iml
+*.iws
+*.ipr
+
+# Maven generated files #
+*.versionsBackup
