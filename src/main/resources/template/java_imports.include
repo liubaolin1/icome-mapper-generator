@@ -1,0 +1,16 @@
+import java.util.*;
+
+import javacommon.base.*;
+import javacommon.util.*;
+
+import org.rapid_framework.util.*;
+import org.rapid_framework.web.util.*;
+import org.rapid_framework.page.*;
+import org.rapid_framework.page.impl.*;
+
+import ${basepackage}.model.*;
+import ${basepackage}.dao.*;
+import ${basepackage}.service.*;
+import ${basepackage}.vo.query.*;
+
+

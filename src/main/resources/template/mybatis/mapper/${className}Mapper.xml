@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<#assign updateIgnoreList = ["create_time", "update_time", "screate_time", "supdate_time"] />
+<#assign className = table.className />
+<#assign pkSqlName = table.pkColumn.sqlName />
+<#assign pkColumnName = table.pkColumn.columnNameLower />
+<#assign leftside = "${r'#{'}" />
+<#assign rightside = "}" />
+<mapper namespace="${basepackage}.${className}Po">
+	<resultMap id="BaseResultMap" type="${basepackage}.${className}Po">
+		<#list table.columns as column>
+		<#if column.pk>
+		<id column="${column.sqlName}" property="${column.columnNameLower}" />
+		<#else>
+		<result column="${column.sqlName}" property="${column.columnNameLower}" />
+		</#if>
+		</#list>
+	</resultMap>
+
+	<sql id="Table_Name">
+		${table.sqlName}
+	</sql>
+
+	<sql id="Base_Column">
+		<#list table.columns as column>
+		<#if column_has_next>
+		${column.sqlName},
+		<#else>
+		${column.sqlName}
+		</#if>
+		</#list>
+	</sql>
+
+	<sql id="Base_Where">
+	    <trim prefixOverrides="AND">
+	      <#list table.columns as column>
+		  <if test="${column.columnNameLower} != null">
+            AND ${column.sqlName} = ${leftside}${column.columnNameLower}${rightside}
+		  </if>
+		  </#list>
+	    </trim>
+	</sql>
+	
+    <sql id="Base_Select">
+	    select
+		  <include refid="Base_Column" />
+		from
+		  <include refid="Table_Name" />
+		<where>
+		  <include refid="Base_Where" />
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="${basepackage}.${className}Po" useGeneratedKeys="true" keyProperty="${pkColumnName}">
+	    insert into <include refid="Table_Name" />
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+	      <@generateInsertColumn/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <@generateInsertValue/>
+        </trim>
+	</insert>
+	
+    <insert id="insertList" parameterType="java.util.List">
+	    insert into <include refid="Table_Name" />
+          (
+		  <#list table.notPkColumns as column><#rt>
+            ${column.sqlName}<#if column_has_next>,</#if>
+          </#list>
+          ) 
+	      values
+	    <foreach collection="list" item="item" separator=",">
+          (
+          <#list table.notPkColumns as column><#rt>
+            ${leftside}item.${column.columnNameLower}${rightside}<#if column_has_next>,</#if>
+	      </#list>
+          )
+        </foreach>
+	</insert>
+
+	<update id="update" parameterType="${basepackage}.${className}Po">
+	    update <include refid="Table_Name" />
+	    <set>
+          <@generateUpdate/>
+	    </set>
+	    where <@generatePKWhere/>
+	</update>
+
+	<update id="updateByEntity" parameterType="${basepackage}.${className}Po">
+		update
+		<include refid="Table_Name" />
+		<set>
+			<#list table.notPkColumns as column>
+			<if test="s.${column.columnNameLower} != null">
+			    ${column.sqlName} = ${leftside}s.${column.columnNameLower}${rightside}<#if column_has_next>, </#if>
+			</if>
+			</#list>
+		</set>
+		where
+		  <trim prefix="(" suffix=")" prefixOverrides="AND">
+			<#list table.columns as column>
+			<if test="w.${column.columnNameLower} != null">
+                AND ${column.sqlName} = ${leftside}w.${column.columnNameLower}${rightside}
+ 			</if>
+			</#list>
+		  </trim>
+	</update>
+
+	<select id="count" parameterType="${basepackage}.${className}Po" resultType="java.lang.Integer">
+	    select count(1) from <include refid="Table_Name" />
+	    <where>
+	      <include refid="Base_Where" />
+	    </where>
+	</select>
+
+	<select id="selectOne" parameterType="${basepackage}.${className}Po" resultMap="BaseResultMap">
+	    <include refid="Base_Select" />
+	</select>
+	
+	<select id="selectById" parameterType="${table.pkColumn.javaType}" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column" />
+	    from <include refid="Table_Name" />
+	    where <@generatePKWhere/>
+	</select>
+
+	<select id="selectList" parameterType="${basepackage}.${className}Po" resultMap="BaseResultMap">
+	    <include refid="Base_Select" />
+	</select>
+	
+	<delete id="delete" parameterType="${basepackage}.${className}Po">
+	    delete from <include refid="Table_Name" />
+		where
+		  <include refid="Base_Where" />
+	</delete>
+	
+	<delete id="deleteById" parameterType="${table.pkColumn.javaType}">
+	    delete from <include refid="Table_Name" />
+        where <@generatePKWhere/>
+	</delete>
+	
+	<#macro generatePKWhere>
+    <#lt>${pkSqlName} = ${leftside}${pkColumnName}${rightside}<#rt>
+	</#macro>
+
+	<#macro generateUpdate>
+	<#list table.notPkColumns as column>
+	    <#if !updateIgnoreList?seq_contains(column)>
+        <if test="${column.columnNameLower} != null">
+          ${column.sqlName} = ${leftside}${column.columnNameLower}${rightside},
+        </if>
+        </#if>
+	</#list>
+	</#macro>
+
+	<#macro generateInsertColumn>
+	<#list table.columns as column>
+          <if test="${column.columnNameLower} != null">
+            ${column.sqlName},
+          </if>
+	</#list>
+	</#macro>
+	<#macro generateInsertValue>
+	<#list table.columns as column>
+	      <if test="${column.columnNameLower} != null">
+		    ${leftside}${column.columnNameLower}${rightside},
+	      </if>
+	</#list>
+	</#macro>
+</mapper>
