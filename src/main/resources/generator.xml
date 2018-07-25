@@ -5,20 +5,29 @@
                                  代码生成器配置文件: 
           1.会为所有的property生成property_dir属性,如pkg=com.company => pkg_dir=com/company
           2.可以引用环境变量: ${env.JAVA_HOME} or System.properties: ${user.home},property之间也可以相互引用
+
+          使用：
+          1.文件包路径写成你项目的路径
+          2.默认生成到本地 d:/temp 中
+          3.生成后将 mybatis 下的包粘到项目中即可
+          4.手动引入一下依赖即可完成
+         git remote add origin url
      </comment>
-     <entry key="basepackage">enn.icome.kernel.label.entity.po</entry>
+    <!--生成文件包路径-->
+     <entry key="basepackage">com.enn.mi.data</entry>
      <!-- jsp namespace: web/${namespace}/${className}/list.jsp -->
      <entry key="namespace">pages</entry>
+    <!--生成到本地地址-->
      <entry key="outRoot">d:/temp</entry>
      
      
      <!-- 需要移除的表名前缀,使用逗号进行分隔多个前缀,示例值: t_,v_ -->
      <entry key="tableRemovePrefixes"/>
      
-     <entry key="jdbc_username">kernelroot</entry>
-     <entry key="jdbc_password">Root1234</entry>
-     
-     <entry key="jdbc_url">jdbc:mysql://192.168.3.6:3306/label?useunicode=true&amp;characterencoding=utf-8</entry>
+     <entry key="jdbc_username">mi</entry>
+     <entry key="jdbc_password">mi</entry>
+
+     <entry key="jdbc_url">jdbc:mysql://10.39.0.242:3306/mi-data?useUnicode=true&amp;characterEncoding=utf-8</entry>
      <entry key="jdbc_driver">com.mysql.jdbc.Driver</entry>
      
      

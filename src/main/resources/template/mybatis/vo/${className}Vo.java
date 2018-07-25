@@ -1,10 +1,10 @@
 <#assign className = table.className>   
 <#assign classNameLower = className?uncap_first> 
-package ${basepackage}.po;
+package ${basepackage}.vo;
 
 import java.io.Serializable;
 
-public class ${className}Po implements Serializable {
+public class ${className}Vo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	// alias

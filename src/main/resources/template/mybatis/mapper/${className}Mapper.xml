@@ -7,7 +7,7 @@
 <#assign leftside = "${r'#{'}" />
 <#assign rightside = "}" />
 <mapper namespace="${basepackage}.${className}Po">
-	<resultMap id="BaseResultMap" type="${basepackage}.${className}Po">
+	<resultMap id="BaseResultMap" type="${basepackage}.po.${className}Po">
 		<#list table.columns as column>
 		<#if column.pk>
 		<id column="${column.sqlName}" property="${column.columnNameLower}" />
@@ -138,6 +138,26 @@
 	    delete from <include refid="Table_Name" />
         where <@generatePKWhere/>
 	</delete>
+
+	<select id="searchList" parameterType="${basepackage}.${className}Po" resultMap="BaseResultMap">
+		select
+		  <include refid="Base_Column" />
+		from
+		  <include refid="Table_Name" />
+		  <where>
+			<trim prefixOverrides="AND">
+				<#list table.columns as column>
+					<if test="${column.columnNameLower} != null<#if column.isStringColumn> and ${column.columnNameLower} != ''</#if>">
+						AND ${column.sqlName}<#rt>
+						<#if column.isStringColumn><#lt> like CONCAT('%', ${leftside}${column.columnNameLower}${rightside}, '%')
+						<#else><#lt> = ${leftside}${column.columnNameLower}${rightside}
+						</#if>
+					</if>
+		  		</#list>
+		    </trim>
+		 </where>
+		order by ${pkSqlName} desc
+	</select>
 	
 	<#macro generatePKWhere>
     <#lt>${pkSqlName} = ${leftside}${pkColumnName}${rightside}<#rt>
