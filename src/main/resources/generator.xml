@@ -22,11 +22,11 @@
      
      <!-- 需要移除的表名前缀,使用逗号进行分隔多个前缀,示例值: t_,v_ -->
      <entry key="tableRemovePrefixes"/>
-     
-     <entry key="jdbc_username">mi</entry>
-     <entry key="jdbc_password">mi</entry>
+     <!--数据库账号密码-->
+     <entry key="jdbc_username">m</entry>
+     <entry key="jdbc_password">m</entry>
 
-     <entry key="jdbc_url">jdbc:mysql://10.39.0.242:3306/mi-data?useUnicode=true&amp;characterEncoding=utf-8</entry>
+     <entry key="jdbc_url">jdbc:mysql://0.0.0.0:3306/mi-data?useUnicode=true&amp;characterEncoding=utf-8</entry>
      <entry key="jdbc_driver">com.mysql.jdbc.Driver</entry>
      
      
