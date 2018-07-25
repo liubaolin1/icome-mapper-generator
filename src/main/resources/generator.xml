@@ -11,7 +11,6 @@
           2.默认生成到本地 d:/temp 中
           3.生成后将 mybatis 下的包粘到项目中即可
           4.手动引入一下依赖即可完成
-         git remote add origin url
      </comment>
     <!--生成文件包路径-->
      <entry key="basepackage">com.enn.mi.data</entry>
